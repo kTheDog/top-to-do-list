@@ -1,6 +1,6 @@
 
 
-const taskUIFactory = (title="", description="", dueDate="", priority=1) => {
+const taskUIFactory = (title="", description="", dueDate="", priority=1, dataID) => {
   let element = document.createElement('div')
 
   element.innerHTML = `<div class="top-row">
@@ -53,13 +53,14 @@ const taskUIFactory = (title="", description="", dueDate="", priority=1) => {
   buttonsElement.appendChild(cancelButton)
 
   element.appendChild(buttonsElement)
+3
 
   let titleInput = element.children[0].children[0].children[1]
   let dateInput = element.children[0].children[1].children[1]
   let textarea = element.children[1].children[1]
   return {
     element, title, description, dueDate, priority, addButton, cancelButton, titleInput,
-    dateInput, textarea
+    dateInput, textarea, dataID
   }
 }
 
@@ -75,16 +76,24 @@ const createTaskButton = () => {
 
   taskButton.id = 'task-button'
   taskButton.innerHTML = svgIcon + ` Add Task`
-
   return taskButton
 }
 
 
 
-
+const taskItemToJSON = (object) => {
+  object.title = object.titleInput.value
+  object.description = object.textarea.value
+  object.dueDate = object.dateInput.value
+  let objID = JSON.parse(localStorage.getItem('id'))
+  object.dataID = objID
+  localStorage.setItem('id', objID + 1)
+  localStorage.setItem(object.title, JSON.stringify(object))
+}
 
 
 export {
   createTaskButton,
-  taskUIFactory
+  taskUIFactory,
+  taskItemToJSON
 }
