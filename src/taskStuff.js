@@ -1,29 +1,29 @@
 
 
-const taskUIFactory = (title="", description="", dueDate="", priority=1, dataID) => {
+const taskUIFactory = (title="", description="", dueDate="", priority=1) => {
   let element = document.createElement('div')
 
   element.innerHTML = `<div class="top-row">
-  <div id="add-title">
-    <label for="title-input">Title</label>
-    <input type="text" name="title" id="title-input" value="`+title+`">
-  </div>
-  <div id="select-date">
-    <label for="due-date">Date</label>
-    <input type="date" name="due-date" id="due-date" value="`+dueDate+`">
-  </div>
-  <div id="select-prio">
-    <div>Priority</div>
-    <button class="low"></button>
-    <button class="medium"></button>
-    <button class="high"></button>
-  </div>
-</div>
-<div id="add-description">
-  <label for="description">Description</label>
-  <textarea name="description" id="description">`+description+`</textarea>
-</div>
-`
+                        <div id="add-title">
+                          <label for="title-input">Title</label>
+                          <input type="text" name="title" id="title-input" value="`+title+`">
+                        </div>
+                        <div id="select-date">
+                          <label for="due-date">Date</label>
+                          <input type="date" name="due-date" id="due-date" value="`+dueDate+`">
+                        </div>
+                        <div id="select-prio">
+                          <div>Priority</div>
+                          <button class="low"></button>
+                          <button class="medium"></button>
+                          <button class="high"></button>
+                        </div>
+                      </div>
+                      <div id="add-description">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description">`+description+`</textarea>
+                      </div>
+                    `
 
 
 
@@ -54,13 +54,15 @@ const taskUIFactory = (title="", description="", dueDate="", priority=1, dataID)
 
   element.appendChild(buttonsElement)
 3
-
+/*
   let titleInput = element.children[0].children[0].children[1]
   let dateInput = element.children[0].children[1].children[1]
   let textarea = element.children[1].children[1]
+  let addButton = element.children[2].children[0]
+  let cancelButton = element.children[2].children[1]
+*/
   return {
-    element, title, description, dueDate, priority, addButton, cancelButton, titleInput,
-    dateInput, textarea, dataID
+    element, title, description, dueDate, priority
   }
 }
 
@@ -81,19 +83,8 @@ const createTaskButton = () => {
 
 
 
-const taskItemToJSON = (object) => {
-  object.title = object.titleInput.value
-  object.description = object.textarea.value
-  object.dueDate = object.dateInput.value
-  let objID = JSON.parse(localStorage.getItem('id'))
-  object.dataID = objID
-  localStorage.setItem('id', objID + 1)
-  localStorage.setItem(object.title, JSON.stringify(object))
-}
-
 
 export {
   createTaskButton,
-  taskUIFactory,
-  taskItemToJSON
+  taskUIFactory
 }
