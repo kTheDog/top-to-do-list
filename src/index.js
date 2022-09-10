@@ -1,3 +1,4 @@
+const taskButtons = require('./taskButtons')
 const listDiv = document.getElementById('list')
 
 localStorage.setItem('ID', 1)
@@ -16,23 +17,54 @@ const taskButtonFunction = (taskButton) => {
 
   listDiv.removeChild(taskButton)
   listDiv.appendChild(UI.element)
-  console.log(UI.element.children[0].children[0].children[1])
 }
 
+
+
+
 const taskToDom = (object) => {
-  let test = document.createElement('div')
   object = JSON.parse(object)
-  console.log(object)
-  test.textContent = object.title + object.description
-  console.log(object.title)
-  listDiv.appendChild(test)
+  let element = document.createElement('div'),
+      titleDiv = document.createElement('div'),
+      dateDiv = document.createElement('div'),
+      buttonDiv = document.createElement('div'),
+      descriptionDiv = document.createElement('div'),
+      taskMain = document.createElement('div');
+
+  element.dataset.id = object.itemID
+  element.className = 'task-item'
+  titleDiv.className = 'title-div'
+  dateDiv.className = 'date-div'
+  descriptionDiv.className = 'hide description-div'
+  buttonDiv.className = 'button-div'
+  taskMain.className = 'task-main'
+
+  titleDiv.textContent = object.title
+  dateDiv.textContent = object.date
+  descriptionDiv.textContent = object.description
+
+
+  buttonDiv.appendChild(taskButtons.removeTask())
+  buttonDiv.appendChild(taskButtons.expandTask())
+  buttonDiv.appendChild(taskButtons.editTask())
+
+  taskMain.appendChild(titleDiv)
+  taskMain.appendChild(dateDiv)
+  taskMain.appendChild(buttonDiv)
+
+
+  element.appendChild(taskMain)
+  element.appendChild(descriptionDiv)
+
+  listDiv.appendChild(element)
+
 }
 
 const reloadDom = () => {
   listDiv.innerHTML = ""
   let wholeStorage = JSON.parse(JSON.stringify(localStorage))
   for (let key in wholeStorage) {
-    if (key === 'ID') {console.log('works'); continue}
+    if (key === 'ID') {continue}
     taskToDom(wholeStorage[key])
 
   }
@@ -41,12 +73,11 @@ const reloadDom = () => {
 const greenButtonFunction = (UI) => {
   let inpTitle = UI.element.children[0].children[0].children[1].value,
       inpDate = UI.element.children[0].children[1].children[1].value,
-      inpDescription = UI.element.children[1].children[1].value
-      itemID = +localStorage.getItem('ID')
+      inpDescription = UI.element.children[1].children[1].value,
+      itemID = +localStorage.getItem('ID'),
       priority = UI.priority
 
 
-  console.log("haha")
   addToJson(inpTitle, inpDate, inpDescription, priority, itemID)
 
   localStorage.setItem('ID', itemID + 1)
@@ -118,7 +149,9 @@ const taskUI = (title="", description="", date="", priority="") => {
   }
 }
 
-
-
+export {
+  taskUI,
+  greenButtonFunction
+}
 
 taskButtonElement()
