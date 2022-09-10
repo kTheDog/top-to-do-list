@@ -1,5 +1,15 @@
 const imports = require('./index')
 
+const listDiv = document.getElementById('list')
+
+const taskButtonElement = (taskButtonFunction) => {
+  let element = document.createElement('button')
+  element.innerHTML =`<strong>Add task</strong>`
+  element.addEventListener('click', () => {
+    taskButtonFunction(element)
+  })
+  listDiv.appendChild(element)
+}
 
 const expandTask = () => {
   let button = document.createElement('button')
@@ -16,7 +26,7 @@ const expandTask = () => {
   return button
 }
 
-const editTask = () => {
+const editTask = (taskUI, greenButtonFunction) => {
   let button = document.createElement('button')
 
   button.className = 'edit-task'
@@ -26,10 +36,10 @@ const editTask = () => {
 
 
     let object = JSON.parse(localStorage.getItem(target.dataset.id)),
-        replacement = imports.taskUI(object.title, object.description, object.date, object.priority)
+        replacement = taskUI(object.title, object.description, object.date, object.priority)
 
     replacement.addButton.addEventListener('click', () => {
-      imports.greenButtonFunction(replacement)
+      greenButtonFunction(replacement)
     })
     target.replaceWith(replacement.element)
     console.log(object)
@@ -58,6 +68,7 @@ const removeTask = () => {
 export {
   removeTask,
   expandTask,
-  editTask
+  editTask,
+  taskButtonElement
 }
 
