@@ -20,52 +20,44 @@ const taskButtonFunction = (taskButton) => {
 }
 
 const taskToDom = (object) => {
-  object = JSON.parse(object)
   let test = document.createElement('div')
-  console.log(object["title"])
-  test.textContent = object.title
+  object = JSON.parse(object)
+  console.log(object)
+  test.textContent = object.title + object.description
   console.log(object.title)
   listDiv.appendChild(test)
 }
 
 const reloadDom = () => {
+  listDiv.innerHTML = ""
   let wholeStorage = JSON.parse(JSON.stringify(localStorage))
   for (let key in wholeStorage) {
+    if (key === 'ID') {console.log('works'); continue}
     taskToDom(wholeStorage[key])
 
   }
-  taskButtonElement()
 }
-const taskUIref = (() => {
-  let inpTitle = (UI) => { return UI.element.children[0].children[0].children[1]},
-      inpDate = (UI) => { return UI.element.children[0].children[1].children[1]},
-      inpDescription = (UI) => { return UI.element.children[1].children[1]}
 
-  return {
-    inpTitle, inpDate, inpDescription
-  }
-})()
 const greenButtonFunction = (UI) => {
+  let inpTitle = UI.element.children[0].children[0].children[1].value,
+      inpDate = UI.element.children[0].children[1].children[1].value,
+      inpDescription = UI.element.children[1].children[1].value
+      itemID = +localStorage.getItem('ID')
+      priority = UI.priority
 
-  addToJson(UI)
+
+  console.log("haha")
+  addToJson(inpTitle, inpDate, inpDescription, priority, itemID)
+
+  localStorage.setItem('ID', itemID + 1)
 
   reloadDom()
-
+  taskButtonElement()
 }
 
-const addToJson = (UI) => {
-  let itemID = localStorage.getItem('ID')
-
-  let obj =
-    {
-      title: taskUIref.inpTitle(UI).value,
-      description: taskUIref.inpDescription(UI).value,
-      date: taskUIref.inpDate(UI).value,
-      priority: UI.priority,
-      itemID: itemID
-    }
-  localStorage.setItem(obj.title, JSON.stringify(obj))
-  localStorage.setItem('ID', itemID + 1)
+const addToJson = (title, date, description, priority, itemID) => {
+  let obj = {title, date, description, priority, itemID}
+  localStorage.setItem(obj.itemID, JSON.stringify(obj))
 }
 
 
