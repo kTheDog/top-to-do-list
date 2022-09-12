@@ -1,9 +1,11 @@
+import { el } from 'date-fns/locale'
 
 const mainFunctions = require('./mainFunctions')
 
 const newTaskButton = () => {
   let element = document.createElement('button')
 
+  element.className = 'new-task'
   element.textContent = 'new task'
 
   return element
@@ -48,7 +50,7 @@ const taskUi = (title="", description="", date="", priority="", id) => {
 </div>
 
   `
-  element.className = 'task-item'
+  element.className = 'task-ui'
   let inpTitle = element.children[0].children[0].children[1],
       inpDate = element.children[0].children[1].children[1],
       inpDescription = element.children[1].children[1],
@@ -95,14 +97,22 @@ const editTask = () => {
   return element
 }
 
+const finishTask = () => {
+  let element = document.createElement('button')
+
+  element.className = 'finish-task'
+  element.textContent = 'finish task'
+
+  return element
+}
+
 const taskItem = (object) => {
   let element = document.createElement('div'),
       titleDiv = document.createElement('div'),
       dateDiv = document.createElement('div'),
       buttonDiv = document.createElement('div'),
       descriptionDiv = document.createElement('div'),
-      taskMain = document.createElement('div');
-
+      taskMain = document.createElement('div')
   element.dataset.id = object.id
   element.className = 'task-item'
   titleDiv.className = 'title-div'
@@ -115,6 +125,7 @@ const taskItem = (object) => {
   dateDiv.textContent = object.date
   descriptionDiv.textContent = object.description
 
+  taskMain.appendChild(finishTask())
   taskMain.appendChild(titleDiv)
   taskMain.appendChild(dateDiv)
   taskMain.appendChild(buttonDiv)
@@ -123,20 +134,20 @@ const taskItem = (object) => {
   buttonDiv.appendChild(editTask())
   buttonDiv.appendChild(removeTask())
 
-
   element.appendChild(taskMain)
   element.appendChild(descriptionDiv)
 
   let expand = buttonDiv.children[0],
       edit = buttonDiv.children[1],
-      remove = buttonDiv.children[2]
-
+      remove = buttonDiv.children[2],
+      finish = taskMain.children[0]
   return {
     element,
     object,
     expand,
     edit,
-    remove
+    remove,
+    finish
 
   }
 }

@@ -10,8 +10,6 @@ const addToJson = (UI) => {
   object.description = UI.inpDescription.value
   object.date = UI.inpDate.value
   object.priority = UI.priority
-  console.log(object.id)
-
   object.id = UI.id || itemID
   localStorage.setItem('ID', itemID)
   localStorage.setItem(object.id, JSON.stringify(object))
@@ -34,12 +32,19 @@ const newTaskButton = (button) => {
 }
 
 const greenButton = (UI) => {
+  if (!(UI.inpTitle.value && UI.inpDate.value && UI.inpDescription.value)) {
+    alert('Please fill in all fields')
+    return;
+  }
   addToJson(UI),
   reloadDom(),
   editDom.newTaskButton()
 }
 
 const editTaskButton = (object) => {
+  /*take this out if you wanna allow multiple edits at the same time */
+  reloadDom()
+  editDom.newTaskButton()
 
   let replacement = supplyElement.taskUi(),
       replaceThis = listDiv.querySelector(`[data-id="${object.id}"]`)
@@ -50,7 +55,6 @@ const editTaskButton = (object) => {
   replacement.inpDescription.value = object.description
   replacement.priority = object.priority
   replacement.id = object.id
-  console.log(replaceThis)
   editDom.taskUi(replaceThis, replacement)
 }
 
@@ -61,7 +65,12 @@ const removeTaskButton = (element, id) => {
 
 const expandTaskButton = (element) => {
   let referenceDescription = element.children[1]
-  referenceDescription.classlist.toggle('hide')
+  referenceDescription.classList.toggle('hide')
+}
+
+const finishTaskButton = (element) => {
+  let target = element.nextElementSibling
+  target.classList.toggle('finished')
 }
 
 export {
@@ -70,5 +79,6 @@ export {
   removeTaskButton,
   editTaskButton,
   expandTaskButton,
+  finishTaskButton,
   reloadDom
 }
