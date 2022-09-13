@@ -2,7 +2,7 @@ const supplyElement = require('./supplyElement')
 const mainFunctions = require('./mainFunctions')
 const listDiv = document.getElementById('list')
 const sideBar = document.querySelector('.side-bar')
-
+const dynamicStyles = require('./dynamicStyles')
 
 const newTaskButton = () => {
   let element = supplyElement.newTaskButton()
@@ -14,12 +14,14 @@ const taskUi = (replaceThis, ui = supplyElement.taskUi()) => {
   ui.addButton.addEventListener('click', () => mainFunctions.greenButton(ui))
   /*take this out if you wanna allow multiple task edits at the same time */
 
+  ui.cancelButton.addEventListener('click', () => mainFunctions.redButton())
+
   if (replaceThis.className === 'new-task') {
     mainFunctions.reloadDom()
     listDiv.appendChild(ui.element)
-  }
-
+  } else {
   replaceThis.replaceWith(ui.element)
+  }
 }
 
 const taskItem = (object) => {
@@ -66,6 +68,10 @@ const folderUI = () => {
     mainFunctions.saveFolderButton(UI.input.value)
   })
 
+  UI.cancelButton.addEventListener('click', () => {
+    mainFunctions.cancelFolderButton()
+  })
+
   replaceThis.replaceWith(UI.element)
 }
 const createFolderButton = () => {
@@ -85,10 +91,25 @@ const folderItem = (itemObject) => {
 
   item.element.addEventListener('click', () => {
     mainFunctions.selectFolder(itemObject)
-  })
+  });
+
+  item.deleteItem.addEventListener('click', () => {
+    console.log("H")
+    mainFunctions.deleteFolderButton(item)
+  });
+
+  ['mouseenter', 'mouseleave'].forEach((e) => {
+    item.element.addEventListener(e, ()=> {
+      dynamicStyles.hoverFolderItem(item)
+    })
+  });
+
+
+
 
   sideBar.appendChild(item.element)
 }
+
 
 export {
   newTaskButton,

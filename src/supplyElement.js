@@ -76,10 +76,17 @@ const taskUi = (title="", description="", date="", priority="", id) => {
 const expandTask = () => {
   let element = document.createElement('button')
 
+
+  let expand =
+  `
+  <svg viewBox="0 0 24 24">
+    <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+</svg>
+
+  `
+
   element.className = 'expand-task'
-  element.innerHTML =  `<svg viewBox="0 0 24 24">
-  <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-</svg>`
+  element.innerHTML = expand
 
   return element
 }
@@ -110,9 +117,12 @@ const finishTask = () => {
   let element = document.createElement('button')
 
   element.className = 'finish-task'
-  element.innerHTML = `<svg viewBox="0 0 24 24">
-  <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-</svg>`
+  element.innerHTML =
+  `
+  <svg viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+  </svg>
+  `
 
   return element
 }
@@ -173,7 +183,7 @@ const inboxButton = () => {
     </svg>
     <span>Inbox</span>
     `
-  inboxButton.dataset.id = '-1'
+  element.dataset.id = '-1'
   element.classList.add('inbox')
 
   return element
@@ -233,16 +243,36 @@ const folderUI = (folderTitle="") => {
 
 
 const folderItem = (itemObject) => {
-  let element = document.createElement('button')
-
+  let element = document.createElement('div'),
+      deleteItem = document.createElement('div')
+      name = itemObject.folderName
 
   element.classList.add('folder-item')
+  deleteItem.classList.add('delete-folder')
+  deleteItem.classList.add('hide')
   element.dataset.id = itemObject.itemID
-  element.textContent = itemObject.folderName
 
+  deleteItem.innerHTML =
+    `
+    <svg viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z" />
+    </svg>
+    `
+  element.innerHTML =
+   `
+   <svg viewBox="0 0 24 24">
+    <path fill="currentColor" d="M20,18H4V8H20M20,6H12L10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6Z" />
+    </svg>
+
+    <span>`+ itemObject.folderName + `</span>
+   `
+
+  element.appendChild(deleteItem)
 
   return {
-    element
+    element,
+    deleteItem,
+    name
   }
 }
 
