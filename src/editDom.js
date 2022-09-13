@@ -1,7 +1,7 @@
 const supplyElement = require('./supplyElement')
 const mainFunctions = require('./mainFunctions')
 const listDiv = document.getElementById('list')
-
+const sideBar = document.querySelector('.side-bar')
 
 
 const newTaskButton = () => {
@@ -50,8 +50,52 @@ const taskItem = (object) => {
   listDiv.appendChild(taskItem.element)
 }
 
+const inboxButton = () => {
+  let inboxButton = supplyElement.inboxButton()
+
+  inboxButton.addEventListener('click', () => mainFunctions.inboxButton())
+  sideBar.appendChild(inboxButton)
+}
+
+const folderUI = () => {
+  let UI = supplyElement.folderUI()
+
+  let replaceThis = document.querySelector('.create-folder')
+
+  UI.saveButton.addEventListener('click', () => {
+    mainFunctions.saveFolderButton(UI.input.value)
+  })
+
+  replaceThis.replaceWith(UI.element)
+}
+const createFolderButton = () => {
+  let createFolderButton = supplyElement.createFolderButton()
+
+  createFolderButton.addEventListener('click', () => {
+    mainFunctions.createFolderButton()
+  })
+
+
+
+  sideBar.appendChild(createFolderButton)
+}
+
+const folderItem = (itemObject) => {
+  let item = supplyElement.folderItem(itemObject)
+
+  item.element.addEventListener('click', () => {
+    mainFunctions.selectFolder(itemObject)
+  })
+
+  sideBar.appendChild(item.element)
+}
+
 export {
   newTaskButton,
   taskUi,
-  taskItem
+  taskItem,
+  inboxButton,
+  createFolderButton,
+  folderUI,
+  folderItem
 }

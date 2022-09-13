@@ -1,6 +1,7 @@
 const supplyElement = require('./supplyElement')
 const editDom = require('./editDom')
 const listDiv = document.getElementById('list')
+const sideBar = document.querySelector('.side-bar')
 
 const addToJson = (UI) => {
   let object = {},
@@ -11,17 +12,25 @@ const addToJson = (UI) => {
   object.date = UI.inpDate.value
   object.priority = UI.priority
   object.id = UI.id || itemID
+  object.folder = localStorage.getItem('selectedFolder')
+
+  let taskStorage = JSON.parse(localStorage.getItem('taskStorage')) || {}
+  taskStorage[itemID] = object
+
   localStorage.setItem('ID', itemID)
-  localStorage.setItem(object.id, JSON.stringify(object))
+  localStorage.setItem('taskStorage', JSON.stringify(taskStorage))
 }
 
-const reloadDom = () => {
+const reloadDom = (folderName='inbox') => {
   listDiv.innerHTML = ""
-  let storage = JSON.parse(JSON.stringify(localStorage))
+  let storage = JSON.parse(localStorage.getItem('taskStorage'))
   for (let key in storage) {
-    if(key === "ID") {continue}
-    let obj = JSON.parse(storage[key])
-    editDom.taskItem(obj)
+    let obj = storage[key]
+    if (folderName==='inbox' || folderName == obj.folder) {
+      console.log(obj.folder)
+      editDom.taskItem(obj)
+    }
+
 
   }
 
@@ -42,7 +51,7 @@ const greenButton = (UI) => {
 }
 
 const editTaskButton = (object) => {
-  /*take this out if you wanna allow multiple edits at the same time */
+  /*take this out if you wanna allow multiple task edits at the same time */
   reloadDom()
   editDom.newTaskButton()
 
@@ -73,6 +82,59 @@ const finishTaskButton = (element) => {
   target.classList.toggle('finished')
 }
 
+const createFolderButton = () => {
+  editDom.folderUI()
+}
+
+const saveFolderButton = (value) => {
+  if (!value) {alert('Please enter a name for your folder')}
+  let folderStorage = JSON.parse(localStorage.getItem('folderStorage')) || {},
+      itemID = +localStorage.getItem('ID') + 1
+  folderStorage[value] = {folderName: value, itemID}
+  localStorage.setItem('ID', itemID)
+  localStorage.setItem('selectedFolder', JSON.stringify(value))
+
+  localStorage.setItem('folderStorage', JSON.stringify(folderStorage))
+
+
+  reloadSideBar()
+}
+
+
+
+const reloadSideBar = () => {
+
+  sideBar.innerHTML = ""
+
+  editDom.inboxButton()
+
+  let folderStorage = JSON.parse(localStorage.getItem('folderStorage'))
+
+  for (let key in folderStorage) {
+    editDom.folderItem(folderStorage[key])
+  }
+
+}
+
+const selectFolder = (itemObject) => {
+
+
+  let target = sideBar.querySelector(`[data-id="${itemObject.itemID}"]`)
+
+  localStorage.setItem('selectedFolder', itemObject.folderName)
+
+  target.classList.add('selected-folder')
+  console.log(itemObject.folderName)
+  reloadSideBar(itemObject.folderName)
+
+}
+
+
+const inboxButton = () => {
+  console.log('this')
+  selectFolder({folderName: "test", itemID: -1})
+}
+
 export {
   newTaskButton,
   greenButton,
@@ -80,5 +142,9 @@ export {
   editTaskButton,
   expandTaskButton,
   finishTaskButton,
-  reloadDom
+  reloadDom,
+  createFolderButton,
+  saveFolderButton,
+  selectFolder,
+  inboxButton
 }
