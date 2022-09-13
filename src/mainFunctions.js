@@ -6,7 +6,7 @@ const sideBar = document.querySelector('.side-bar')
 const addToJson = (UI) => {
   let object = {},
       itemID = +localStorage.getItem('ID') + 1
-
+  console.log(UI)
   object.title = UI.inpTitle.value
   object.description = UI.inpDescription.value
   object.date = UI.inpDate.value
@@ -15,7 +15,7 @@ const addToJson = (UI) => {
   object.folder = localStorage.getItem('selectedFolder')
 
   let taskStorage = JSON.parse(localStorage.getItem('taskStorage')) || {}
-  taskStorage[itemID] = object
+  taskStorage[object.id] = object
 
   localStorage.setItem('ID', itemID)
   localStorage.setItem('taskStorage', JSON.stringify(taskStorage))
@@ -39,7 +39,7 @@ const newTaskButton = (button) => {
 }
 
 const greenButton = (UI) => {
-  if (!(UI.inpTitle.value && UI.inpDate.value && UI.inpDescription.value)) {
+  if (!(UI.inpTitle.value && UI.inpDate.value && UI.inpDescription.value && UI.priority)) {
     alert('Please fill in all fields')
     return;
   }
@@ -68,11 +68,20 @@ const editTaskButton = (object) => {
   replacement.priority = object.priority
   replacement.id = object.id
   editDom.taskUi(replaceThis, replacement)
+
+  let taskStorage =JSON.parse(localStorage.getItem('taskStorage'))
+  delete taskStorage[JSON.stringify(object.id)]
+  localStorage.setItem('taskStorage', JSON.stringify(taskStorage))
+
 }
 
 const removeTaskButton = (element, id) => {
   element.remove()
-  localStorage.removeItem(JSON.stringify(id))
+  let taskStorage = JSON.parse(localStorage.getItem('taskStorage'))
+  console.log(taskStorage, taskStorage[+id], id)
+  delete taskStorage[id]
+  console.log(taskStorage[JSON.stringify(id)])
+  localStorage.setItem('taskStorage', JSON.stringify(taskStorage))
 }
 
 const expandTaskButton = (element) => {
@@ -187,6 +196,17 @@ const inboxButton = () => {
   selectFolder({folderName: "inbox", itemID: -1})
 }
 
+const prioButtons = (ui, btn) => {
+  console.log(ui)
+  console.log(btn)
+  ui.priority = btn.id
+
+  ui.prioButtons.children[0].classList.remove('current-prio')
+  ui.prioButtons.children[1].classList.remove('current-prio')
+  ui.prioButtons.children[2].classList.remove('current-prio')
+
+  btn.classList.add('current-prio')
+}
 
 export {
   newTaskButton,
@@ -203,5 +223,6 @@ export {
   reloadSideBar,
   redButton,
   cancelFolderButton,
-  deleteFolderButton
+  deleteFolderButton,
+  prioButtons
 }

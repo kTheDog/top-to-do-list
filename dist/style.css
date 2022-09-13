@@ -53,10 +53,6 @@ h1 > svg {
 }
 
 
-.task-item {
-}
-
-
 .content-wrapper {
   display: grid;
   grid-template-columns: 1fr 5fr;
@@ -152,16 +148,16 @@ textarea {
   height: 3em;
 }
 
-.low {
-  background-color: green;
+#low {
+  background-color: rgb(180, 223, 180);
 }
 
-.medium {
-  background-color: orange;
+#medium {
+  background-color: rgb(214, 103, 39);
 }
 
-.high {
-  background-color: red;
+#high {
+  background-color: rgb(167, 0, 0);
 }
 
 .top-row {
@@ -292,4 +288,31 @@ svg:hover {
 .folder-item:hover, .inbox:hover, .create-folder:hover {
   filter: brightness(150%);
   transform: scale(1.05);
+}
+
+.current-prio {
+  scale: 1.2;
+  outline: 1px rgb(0, 119, 255) groove;
+
+}
+#select-prio :hover {
+  scale: 1.2;
+}
+
+
+[data-priority="low"] > svg {
+  color: antiquewhite;
+}
+
+
+[data-priority="medium"] > svg {
+  color: orange;
+}
+
+[data-priority="low"] > svg {
+  color: antiquewhite;
+}
+
+[data-priority="high"] > svg {
+  color: rgb(161, 0, 0);
 }

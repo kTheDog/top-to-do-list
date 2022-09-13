@@ -30,10 +30,9 @@ const taskUi = (title="", description="", date="", priority="", id) => {
     <input type="date" name="due-date" id="due-date" value="">
   </div>
   <div id="select-prio">
-    <div></div>
-    <button class="low"></button>
-    <button class="medium"></button>
-    <button class="high"></button>
+    <button id="low"></button>
+    <button id="medium"></button>
+    <button id="high"></button>
   </div>
 </div>
 <div id="add-description">
@@ -59,7 +58,8 @@ const taskUi = (title="", description="", date="", priority="", id) => {
       inpDate = element.children[0].children[1].children[1],
       inpDescription = element.children[1].children[1],
       addButton = element.children[2].children[0],
-      cancelButton = element.children[2].children[1]
+      cancelButton = element.children[2].children[1],
+      prioButtons = element.children[0].children[2]
       priority = ""
 /*
   title = inpTitle.textContent
@@ -68,7 +68,7 @@ const taskUi = (title="", description="", date="", priority="", id) => {
 */
 
   return {
-    element, inpTitle, inpDate, inpDescription, addButton, cancelButton, priority, id
+    element, inpTitle, inpDate, inpDescription, addButton, cancelButton, priority, id, prioButtons
   }
 
 }
@@ -113,9 +113,9 @@ const editTask = () => {
   return element
 }
 
-const finishTask = () => {
+const finishTask = (prio) => {
   let element = document.createElement('button')
-
+  element.dataset.priority = prio
   element.className = 'finish-task'
   element.innerHTML =
   `
@@ -134,6 +134,8 @@ const taskItem = (object) => {
       buttonDiv = document.createElement('div'),
       descriptionDiv = document.createElement('div'),
       taskMain = document.createElement('div')
+
+
   element.dataset.id = object.id
   element.className = 'task-item'
   titleDiv.className = 'title-div'
@@ -146,7 +148,7 @@ const taskItem = (object) => {
   dateDiv.textContent = object.date
   descriptionDiv.textContent = object.description
 
-  taskMain.appendChild(finishTask())
+  taskMain.appendChild(finishTask(object.priority))
   taskMain.appendChild(titleDiv)
   taskMain.appendChild(dateDiv)
   taskMain.appendChild(buttonDiv)

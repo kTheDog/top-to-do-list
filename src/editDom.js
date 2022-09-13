@@ -16,6 +16,17 @@ const taskUi = (replaceThis, ui = supplyElement.taskUi()) => {
 
   ui.cancelButton.addEventListener('click', () => mainFunctions.redButton())
 
+  let prioButtons = [ui.prioButtons.children[0], ui.prioButtons.children[1], ui.prioButtons.children[2]];
+
+  prioButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      mainFunctions.prioButtons(ui, btn)
+    })
+  })
+
+
+
+
   if (replaceThis.className === 'new-task') {
     mainFunctions.reloadDom()
     listDiv.appendChild(ui.element)
@@ -94,7 +105,6 @@ const folderItem = (itemObject) => {
   });
 
   item.deleteItem.addEventListener('click', () => {
-    console.log("H")
     mainFunctions.deleteFolderButton(item)
   });
 
